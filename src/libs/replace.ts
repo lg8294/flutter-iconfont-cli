@@ -9,3 +9,7 @@ export const replaceCases = (content: string, cases: string) => {
 export const replaceNames = (content: string, names: string[]) => {
   return content.replace(/#names#/g, names.join(', '));
 };
+
+export const replaceClassPrefix = (content: string, prefix: string) => {
+  return content.replace(/#class_prefix#/g, prefix);
+};

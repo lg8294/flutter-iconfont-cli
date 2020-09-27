@@ -1,17 +1,17 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_svg/svg.dart';
 
-enum IconNames {
+enum #class_prefix#IconNames {
   #names#
 }
 
-class IconFont extends StatelessWidget {
-  final IconNames name;
+class #class_prefix#IconFont extends StatelessWidget {
+  final #class_prefix#IconNames name;
   final String color;
   final List<String> colors;
   final double size;
 
-  IconFont(this.name, { this.size = #size#, this.color, this.colors });
+  #class_prefix#IconFont(this.name, { this.size = #size#, this.color, this.colors });
 
   static String getColor(int arrayIndex, String color, List<String> colors, String defaultColor) {
     if (color != null && color.isNotEmpty) {

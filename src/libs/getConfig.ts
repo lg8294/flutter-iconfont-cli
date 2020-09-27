@@ -5,12 +5,14 @@ import defaultConfig from './iconfont.json';
 
 export interface Config {
   symbol_url: string;
-  save_dir: string;
   trim_icon_prefix: string;
   default_icon_size: number;
+  dart_class_prefix: string;
 }
 
-let cacheConfig: Config;
+export const default_save_dir = './lib/generated/iconfont';
+
+let cacheConfig: Array<Config>;
 
 export const getConfig = () => {
   if (cacheConfig) {
@@ -24,21 +26,30 @@ export const getConfig = () => {
     process.exit(1);
   }
 
-  const config = require(targetFile) as Config;
+  let configs = require(targetFile);
 
-  if (!config.symbol_url || !/^(https?:)?\/\//.test(config.symbol_url)) {
-    console.warn(colors.red('You are required to provide symbol_url'));
-    process.exit(1);
+  if(configs instanceof Array) {
+    console.log('是数组', configs);
+  } else {
+    console.log('是单个数据',configs);
+    configs = [configs];
   }
 
-  if (config.symbol_url.indexOf('//') === 0) {
-    config.symbol_url = 'http:' + config.symbol_url;
-  }
+  configs.forEach(function (config) {
+    if (!config.symbol_url || !/^(https?:)?\/\//.test(config.symbol_url)) {
+      console.warn(colors.red('You are required to provide symbol_url'));
+      process.exit(1);
+    }
 
-  config.save_dir = config.save_dir || defaultConfig.save_dir;
-  config.default_icon_size = config.default_icon_size || defaultConfig.default_icon_size;
+    if (config.symbol_url.indexOf('//') === 0) {
+      config.symbol_url = 'http:' + config.symbol_url;
+    }
 
-  cacheConfig = config;
+    config.default_icon_size = config.default_icon_size || defaultConfig.default_icon_size;
+    config.dart_class_prefix = config.dart_class_prefix || defaultConfig.dart_class_prefix;
+  });
 
-  return config;
+  cacheConfig = configs;
+
+  return configs;
 };

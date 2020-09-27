@@ -1,16 +1,17 @@
 import fs from 'fs';
 import path from 'path';
-import mkdirp from 'mkdirp';
-import glob from 'glob';
+// import mkdirp from 'mkdirp';
+// import glob from 'glob';
 import colors from 'colors';
 import { snakeCase } from 'lodash';
 import { XmlData } from 'iconfont-parser';
-import { Config } from './getConfig';
+import { Config, default_save_dir } from './getConfig';
 import { getTemplate } from './getTemplate';
 import {
   replaceCases,
   replaceNames,
   replaceSize,
+  replaceClassPrefix,
 } from './replace';
 import { whitespace } from './whitespace';
 
@@ -18,11 +19,11 @@ const ATTRIBUTE_FILL_MAP = ['path'];
 
 export const generateComponent = (data: XmlData, config: Config) => {
   const names: string[] = [];
-  const saveDir = path.resolve(config.save_dir);
+  const saveDir = path.resolve(default_save_dir);
   let cases: string = '';
 
-  mkdirp.sync(saveDir);
-  glob.sync(path.join(saveDir, '*')).forEach((file) => fs.unlinkSync(file));
+  // mkdirp.sync(saveDir);
+  // glob.sync(path.join(saveDir, '*')).forEach((file) => fs.unlinkSync(file));
 
   data.svg.symbol.forEach((item) => {
     const iconId = item.$.id;
@@ -32,20 +33,28 @@ export const generateComponent = (data: XmlData, config: Config) => {
 
     names.push(iconIdAfterTrim);
 
-    cases += `${whitespace(6)}case IconNames.${iconIdAfterTrim}:\n`;
+    cases += `${whitespace(6)}case ${config.dart_class_prefix}IconNames.${iconIdAfterTrim}:\n`;
     cases += `${whitespace(8)}svgXml = '''${generateCase(item, 10)}${whitespace(8)}''';\n`;
     cases += `${whitespace(8)}break;\n`;
   });
 
-  let iconFile =  getTemplate('Icon.dart');
+  let iconFile = getTemplate('Icon.dart');
 
   iconFile = replaceSize(iconFile, config.default_icon_size);
+  iconFile = replaceClassPrefix(iconFile, config.dart_class_prefix)
   iconFile = replaceCases(iconFile, cases);
   iconFile = replaceNames(iconFile, names);
 
-  fs.writeFileSync(path.join(saveDir, 'IconFont.dart'), iconFile);
+  let fileName;
+  if (config.dart_class_prefix.length > 0) {
+    fileName = '_icon_font.dart';
+  }
+  else {
+    fileName = 'icon_font.dart';
+  }
+  fs.writeFileSync(path.join(saveDir, `${config.dart_class_prefix.toLocaleLowerCase()}${fileName}`), iconFile);
 
-  console.log(`\n${colors.green('√')} All icons have putted into dir: ${colors.green(config.save_dir)}\n`);
+  console.log(`\n${colors.green('√')} All icons have putted into dir: ${colors.green(default_save_dir)}\n`);
 };
 
 const generateCase = (data: XmlData['svg']['symbol'][number], baseIdent: number) => {

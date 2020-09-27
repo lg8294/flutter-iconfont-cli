@@ -10,6 +10,8 @@ rm -rf ./build/src ./build/snapshots
 cp README.md package.json LICENSE ./build
 cp -rf src/templates ./build/templates
 
+# chmod +x ./build/commands/*
+
 old_registry=$(npm config get registry)
 npm config set registry https://registry.npmjs.org
 set +e
