@@ -29,9 +29,9 @@ export const getConfig = () => {
   let configs = require(targetFile);
 
   if(configs instanceof Array) {
-    console.log('是数组', configs);
+    // console.log('是数组', configs);
   } else {
-    console.log('是单个数据',configs);
+    // console.log('是单个数据',configs);
     configs = [configs];
   }
 

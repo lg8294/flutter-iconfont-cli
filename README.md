@@ -31,7 +31,7 @@ flutter packages get
 
 接着安装全局插件（基于nodeJs）
 ```bash
-npm install flutter-iconfont-cli -g
+npm install flutter-iconfont-tool -g
 ```
 
 # Step 2
@@ -43,9 +43,9 @@ npx iconfont-init
 ```json
 {
     "symbol_url": "请参考README.md，复制官网提供的JS链接",
-    "save_dir": "./lib/iconfont",
     "trim_icon_prefix": "icon",
-    "default_icon_size": 18
+    "default_icon_size": 18,
+    "dart_class_prefix": ""
 }
 ```
 ### 配置参数说明：
@@ -57,8 +57,8 @@ npx iconfont-init
 ![](https://github.com/fwh1990/flutter-iconfont-cli/blob/master/images/symbol-url.png?raw=true)
 
 
-### save_dir
-根据iconfont图标生成的组件存放的位置。每次生成组件之前，该文件夹都会被清空。
+### dart_class_prefix
+生成的dart类的前缀
 
 ### trim_icon_prefix
 如果你的图标有通用的前缀，而你在使用的时候又不想重复去写，那么可以通过这种配置这个选项把前缀统一去掉。
@@ -67,7 +67,7 @@ npx iconfont-init
 我们将为每个生成的图标组件加入默认的字体大小，当然，你也可以通过传入props的方式改变这个size值
 
 # Step 3
-开始生成React标准组件
+开始生成Flutter标准组件
 ```bash
 npx iconfont-flutter
 ```
